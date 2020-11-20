@@ -17,8 +17,5 @@ export class AppGateway implements OnGatewayConnection{
     this.logger.log('client  disconnected')
   }
 
-  // @SubscribeMessage('message')
-  // handleMessage(client: any, payload: any): string {
-  //   return 'Hello world!';
-  // }
+
 }

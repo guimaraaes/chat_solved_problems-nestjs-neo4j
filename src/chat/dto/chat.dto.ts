@@ -1,14 +1,19 @@
 import {ApiProperty} from '@nestjs/swagger'
 
-export class Chat{
+class MessageContent{
     @ApiProperty()
-    messages: string[];
-
+    name_user: string;
+    @ApiProperty()
+    message:string;
+    @ApiProperty()
+    date: Date;
 }
 
 export class ChatMessage{
     @ApiProperty()
-    user_name: string;
+    id_user_send_message: number;
+    @ApiProperty({type: 'array', items: {type: 'number'}})
+    id_users_on_chat: number[];
     @ApiProperty()
-    message: string;
+    message_content: MessageContent;
 }
