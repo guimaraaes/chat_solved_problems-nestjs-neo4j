@@ -17,7 +17,7 @@ export class ChatController {
     }
 
 
-    @Get(':id_users')
+    @Get('')
     // @ApiParam({name: 'id_users',
     //             type: 'string', 
     // })

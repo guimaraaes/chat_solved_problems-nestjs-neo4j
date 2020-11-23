@@ -6,7 +6,7 @@ import { AppGateway } from './app.gateway';
 import { UserModule } from './user/user.module';
 import { ChatModule } from './chat/chat.module';
 import { Neo4jModule } from 'nest-neo4j'
-import { HOSTNAME, NEO4J_PASSWORD, SCHEMA, PORT, NEO4J_USER } from './config';
+import { HOSTNAME, NEO4J_PASSWORD, SCHEMA, PORT, NEO4J_USER } from './database/config';
 
 @Module({
   imports: [UserModule, ChatModule,

@@ -20,14 +20,14 @@ export class ChatService {
         
          // CRIAR CHAT SE NÃO EXISTIR
          const m = chatMessage.id_users_on_chat
-         m.forEach( async (value) => { 
-             await this.neo4jService.write(`
-                MATCH (c:Chat) WHERE ALL ( x IN c.id_user WHERE toInteger(x) in $ids )
+         m.forEach(  (value) => { 
+              this.neo4jService.write(`
+                MATCH (c:Chat) WHERE size(c.id_user) = size($ids) and ALL (x IN c.id_user WHERE toInteger(x) in $ids)
                 WITH count(c) as i
                 CALL apoc.do.when(
                     i > 0 ,
-                    'MATCH (c:Chat) WHERE ALL ( x IN c.id_user WHERE toInteger(x) in $ids) MATCH (u:User) WHERE id(u) = toInteger(id) MERGE (c)<-[:IS_ON]-(u) RETURN c',
-                    'CREATE (cr:Chat {id_user: $ids}) WITH cr MATCH (u:User) WHERE id(u) = toInteger($id) MERGE (cr)<-[:IS_ON]-(u) RETURN cr',
+                    'MATCH (cr:Chat) WHERE size(cr.id_user) = size(ids) and  ALL ( x IN cr.id_user WHERE toInteger(x) in ids) MATCH (u:User) WHERE id(u) = (id) MERGE (cr)<-[:IS_ON]-(u) RETURN cr',
+                    'MERGE (cr:Chat {id_user: ids}) WITH cr MATCH (u:User) WHERE id(u) = ($id) WITH cr, u MERGE (cr)<-[:IS_ON]-(u) RETURN cr',
                     {id: $id, ids:$ids}
                     )
                 YIELD value
@@ -37,7 +37,7 @@ export class ChatService {
         });
 
         return await this.neo4jService.write(`
-            MATCH (c:Chat) WHERE ALL ( x IN c.id_user WHERE toInteger(x) in $ids)
+            MATCH (c:Chat) WHERE size(c.id_user) = size($ids) and ALL (x IN c.id_user WHERE toInteger(x) in $ids)
             MATCH (u:User) WHERE id(u) = toInteger($id)
             CREATE (u)<-[:SEND_BY]-(m:Message {name_user: $name_user, message: $message, date: $date})<-[r:RELATIONSHIP]-(c)
                     
@@ -67,11 +67,11 @@ export class ChatService {
         })
     }
 
-    async findByIdUsers(ids: number[]): Promise<any>{
+    async findByIdUsers(ids: number[]){
         //verificar se chat existe existem 
 
         const foundusers =  await this.neo4jService.read(`
-            MATCH (c:Chat) WHERE ALL ( x IN c.id_user WHERE toInteger(x) in $ids )
+            MATCH (c:Chat) WHERE size(c.id_user) = size($ids) and ALL (x IN c.id_user WHERE toInteger(x) in $ids)
             WITH c
             MATCH (c)-[]->(m:Message) 
             RETURN  m,
@@ -85,7 +85,7 @@ export class ChatService {
                     row.get('message'),
                     row.get('date')
                 )
-                this.gateway.wss.emit('newMessage', chatMessage)
+                // this.gateway.wss.emit('newMessage', {name: 'ids'} , chatMessage)
                 return chatMessage
             })
             return users.map(a => a)
