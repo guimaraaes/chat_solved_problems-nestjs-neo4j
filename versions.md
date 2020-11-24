@@ -21,16 +21,15 @@ API com interface básicas para resolver problemas em um chat.
 
 ## Staff, Client, Problem v2
   ### Database
-- [ ] Staff
-- [ ] Client
+- [X] Staff
+- [X] Client
 - [ ] Problem, Solution
-- [ ] HAS_PROBLEM
-- [ ] IS_ON
-- [ ] TO_SOLVE
+- [x] HAS_PROBLEM
+- [ ] SOLVED
 
   ### Api
-- [ ] especificar o tipo de usuário ao criar
-- [ ] cadastrar problema resolvido e eliminar chat
-- [ ] vincular chat ao problema
-- [ ] Abrir chat pelo id dos usuários 
+- [x] especificar o tipo de usuário ao criar
+- [ ] cadastrar problema resolvido e eliminar staff do chat
+- [ ] editar quem está no chat
+- [x] cadastrar chat pelo problema
 - [ ] Veriicar se chat/usuários existem

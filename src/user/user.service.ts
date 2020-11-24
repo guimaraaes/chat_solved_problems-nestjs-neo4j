@@ -9,18 +9,20 @@ export class UserService {
         private neo4jService: Neo4jService
     ) { }
 
-    async create(user: CreateUser) {
+    async create(user: CreateUser, type: string) {
         const foundusers = await this.neo4jService.read(`
-            MERGE (u:User {name: $u.name, type_user: $u.type_user})
+            MERGE (u:User {name: $u.name, type: $type})
+            WITH u
+            CALL apoc.create.addLabels( (u), [ u.type ] )
+            YIELD node
             RETURN  u,
-                    u.name as name,
-                    u.type_user as type_user
-        `, { u: user }).then(res => {
+                    u.name as name
+        `, { u: user, type: type }).then(res => {
             const users = res.records.map(row => {
                 return new User(
                     row.get('u'),
                     row.get('name'),
-                    row.get('type_user')
+                    null
                 )
             })
             return users.map(a => a)
@@ -34,7 +36,6 @@ export class UserService {
             RETURN  u,
                     u.name as name,
                     u.type_user as type_user
-
         `, { id: id }).then(res => {
             const users = res.records.map(row => {
                 return new User(

@@ -1,10 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger'
 
+export enum UserType {
+    Staff = 'Staff',
+    Client = 'Client',
+}
+
 export class CreateUser {
     @ApiProperty()
     name: string;
-    @ApiProperty()
-    type_user: string;
+    // @ApiProperty({ enum: ['Staff', 'Client'] })
+    // type_user: UserType;
 }
 
 export class Staff {
