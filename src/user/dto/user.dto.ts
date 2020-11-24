@@ -1,19 +1,20 @@
-import {ApiProperty} from '@nestjs/swagger'
-import { TimeInterval } from 'rxjs';
+import { ApiProperty } from '@nestjs/swagger'
 
-export class CreateUser{
+export class CreateUser {
     @ApiProperty()
     name: string;
-
     @ApiProperty()
     type_user: string;
 }
 
-export class CreateStaff{
-    @ApiProperty()
+export class Staff {
     problems_solved_count: number;
-    @ApiProperty()
     mean_time_on_channel: Date;
-    @ApiProperty()
-    mean_avaliantion_score: number
+    mean_avaliantion_score: number;
+}
+
+export class Client {
+    quantity_problems: number;
+    problems_solved: number;
+    avaliantion_mean: number;
 }

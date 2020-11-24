@@ -30,11 +30,11 @@ function makeRequest (method, url, data) {
 //GET example
 makeRequest('GET', "http://localhost:3000/chat" + location.search).then(function(data){
 var results=JSON.parse(data);
-// console.log(location.search);
+console.log(location.search);
 const id = new URL(location.href).searchParams.get('id_current_user');
   results.map(d =>{
     if(d.id_user == id){
-      document.getElementById('chat_people_websoket_current_user').innerHTML += `
+      document.getElementById('chat_people_websoket').innerHTML += `
       <div class="container ">
         <p>${d.name_user}: ${d.message}</p>
         <span class="time-right">${d.date}</span>
