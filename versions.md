@@ -32,10 +32,13 @@ API com interface básicas para resolver problemas em um chat.
 - [x] cadastrar problema resolvido e eliminar staff do chat
 - [x] editar quem está no chat
 - [x] cadastrar chat pelo problema
-- [ ] definir os funcionários ao criar o problema
+- [x] definir os funcionários ao criar o problema
 - [x] get para problems de client e staff
 - [x] flexibilizar o identificador do websocket
-- [ ] padronizar variáveis com o esquema
+- [x] padronizar variáveis com o esquema
+
+### api 0.2
+- [ ] controle entre staff no chat de acordo com o problema ao qual foi cadastrado
 
 ## Ações para implementar com o front
 - [ ] enviar hora para poder ordenar as mensagens no chat
