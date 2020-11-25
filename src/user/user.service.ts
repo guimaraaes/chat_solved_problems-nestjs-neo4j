@@ -10,8 +10,16 @@ export class UserService {
     ) { }
 
     async create(user: CreateUser, type: string) {
-        const foundusers = await this.neo4jService.read(`
-            MERGE (u:User {name: $u.name, type: $type})
+        var propertiesDefault
+        if (type == 'Client') {
+            propertiesDefault = 'quantity_problems: 0,  problems_solved: 0, avaliantion_mean: 0'
+
+        } else {
+            propertiesDefault = 'problems_solved_count: 0,  mean_avaliantion_score: 0 '
+
+        }
+        return await this.neo4jService.read(`
+            MERGE (u:User {name: $u.name, type: $type, `+ propertiesDefault + `})
             WITH u
             CALL apoc.create.addLabels( (u), [ u.type ] )
             YIELD node
@@ -27,7 +35,6 @@ export class UserService {
             })
             return users.map(a => a)
         })
-        return foundusers
     }
 
     async findById(id: number): Promise<User[]> {

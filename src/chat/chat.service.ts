@@ -11,7 +11,6 @@ export class ChatService {
     constructor(
         private readonly gateway: AppGateway,
         private readonly neo4jService: Neo4jService,
-        private readonly userService: UserService,
     ) { }
 
     private async existUsers(id_users: number[]): Promise<boolean> {
@@ -24,10 +23,6 @@ export class ChatService {
         })
     }
 
-
-
-
-
     async findByIdUsers(ids: number[]) {
         var id_users = []
         ids.forEach((i) => {
@@ -38,14 +33,15 @@ export class ChatService {
         if (!exist_users)
             throw new HttpException('Chat not found', HttpStatus.NOT_FOUND);
 
-        const foundusers = await this.neo4jService.read(`
+        return await this.neo4jService.read(`
             MATCH (c:Chat) WHERE size(c.id_user) = size($ids) AND ALL (x IN c.id_user WHERE x IN $ids)
             WITH c
-            MATCH (c)-[]->(m:Message) 
+            MATCH (c)-[]->(m:Message)-[:SEND_BY]->(u)
             RETURN  m,
                     m.name_user AS name_user,
                     m.message AS message,
-                    m.date AS date
+                    m.date AS date,
+                    id(u) AS id_user
         `, { ids: id_users }).then(res => {
             const users = res.records.map(row => {
                 const chatMessage = new Message(
@@ -53,11 +49,10 @@ export class ChatService {
                     row.get('message'),
                     row.get('date')
                 )
-                return chatMessage
+                return { chatMessage, id_user: Number(row.get('id_user')) }
             })
             return users.map(a => a)
         })
-        return foundusers
     }
 
     async sendMessage(chatMessage: ChatMessage) {
@@ -70,11 +65,12 @@ export class ChatService {
         if (!exist_users)
             throw new HttpException('Some user not found', HttpStatus.NOT_FOUND);
 
-        var wssCanal = ''
+        var wssCanal = []
         chatMessage.id_users_on_chat.map((value) => {
-            wssCanal = wssCanal + '&id_users=' + value
+            wssCanal.push(value)
         })
-        wssCanal = "?" + wssCanal.slice(1,)
+        wssCanal = wssCanal.sort()
+        // return wssCanal
 
         // id_users.forEach((value) => {
         //     this.neo4jService.write(`
@@ -99,13 +95,14 @@ export class ChatService {
             MATCH (u:User) WHERE id(u) = toInteger($id)
             CREATE (u)<-[:SEND_BY]-(m:Message {name_user: u.name, message: $message, date: $date})<-[r:RELATIONSHIP]-(c)
                     
-            WITH r,m 
+            WITH r,m, u
             CALL apoc.refactor.setType(r, $date)
             YIELD input, output
             RETURN  m,
                     m.name_user AS name_user,
                     m.message AS message,
-                    m.date AS date
+                    m.date AS date,
+                    id(u) AS id_user
         `, {
             id: chatMessage.id_user_send_message,
             ids: chatMessage.id_users_on_chat,
@@ -118,11 +115,12 @@ export class ChatService {
                     message: row.get('message'),
                     date: row.get('date')
                 })
-                return new Message(
+                const message = new Message(
                     row.get('name_user'),
                     row.get('message'),
                     row.get('date')
                 )
+                return { message, id_user: Number(row.get('id_user')) }
             })
 
             return users.map(a => a)
@@ -132,52 +130,35 @@ export class ChatService {
     async editChatRemove(id_chat: number, id_user: number) {
         var ids = await this.neo4jService.read(`
                 MATCH (c:Chat) WHERE id(c) = toInteger($id_chat)
-                MATCH  (u:User)-[r:IS_ON]->(u) WHERE id(u) = $id_user
-//WITH  apoc.coll.disjunction([1,2,3,4,5], [3,4,5]) AS result, c
-
-                DELETE r
-                WITH c, u
-                MERGE (c)<-[:IS_ON]-(u)
-                RETURN c.id_user as output
+                    SET c.id_user = apoc.coll.removeAll(c.id_user, [$id_user])
+                WITH c
+                MATCH  (u:User)-[r:IS_ON]->(c) WHERE id(u) = $id_user
+                    DELETE r
+                RETURN c  
         `, {
             id_chat: id_chat,
-            id_user: id_user
+            id_user: Number(id_user)
         }).then(res => {
-            return res.records[0].get('output')
+            return res.records[0].get('c')
         })
-
-        // ids.push(Number(id_remove))
-        // ids = [...new Set(ids)];
-
-        // ids = ids.filter(e => e !== Number(id_chat))
-
-
         return ids
     }
 
     async editChatAdd(id_chat: number, id_user: number) {
         var ids = await this.neo4jService.read(`
-                MATCH (c:Chat) WHERE id(c) = toInteger($id_chat)
-                COALESCE(c.id_user, toInteger($id_user))
-                MATCH  (u:User) WHERE id(u) = $id_user
-//WITH apoc.coll.union(c.id_user, [15.0]) AS result, c
-
-                WITH c, u
-                MERGE (c)<-[:IS_ON]-(u)
-                RETURN c.id_user as output
+            MATCH (c:Chat) WHERE id(c) = toInteger($id_chat)
+                SET c.id_user = apoc.coll.union(c.id_user, [$id_user])
+            WITH c
+            MATCH (u:User) WHERE id(u) = $id_user
+            WITH c, u
+            CREATE  (u)-[:IS_ON]->(c) 
+            RETURN c  
         `, {
             id_chat: id_chat,
-            id_user: id_user
+            id_user: Number(id_user)
         }).then(res => {
-            return res.records[0].get('output')
+            return res.records[0]
         })
-
-        // ids.push(Number(id_remove))
-        // ids = [...new Set(ids)];
-
-        // ids = ids.filter(e => e !== Number(id_chat))
-
-
         return ids
     }
 }

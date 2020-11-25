@@ -1,8 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger'
 
 export class MessageContent {
-    // @ApiProperty()
-    // name_user: string;
     @ApiProperty()
     message: string;
     @ApiProperty()

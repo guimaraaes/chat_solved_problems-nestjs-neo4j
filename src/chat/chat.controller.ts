@@ -20,9 +20,14 @@ export class ChatController {
         return this.chatService.sendMessage(message);
     }
 
-    @Put(':id/:id_remove')
-    put(@Param('id') id: number, @Param('id_remove') id_remove: number) {
+    @Put('remove_user/:id/:id_remove')
+    putRemoveUser(@Param('id') id: number, @Param('id_remove') id_remove: number) {
         return this.chatService.editChatRemove(id, id_remove)
+    }
+
+    @Put('add_user/:id/:id_add')
+    putAddUser(@Param('id') id: number, @Param('id_add') id_add: number) {
+        return this.chatService.editChatAdd(id, id_add)
     }
 
 }

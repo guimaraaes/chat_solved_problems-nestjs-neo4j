@@ -14,7 +14,6 @@ export class Chat {
             id_users: this.id_users,
             description: this.description,
             date_open: this.date_open,
-            // tagList: this.tagList.map(tag => tag.toJson()),
         }
     }
 }
@@ -31,7 +30,6 @@ export class Message {
             name_user: this.name_user,
             message: this.message,
             date: this.date,
-            // tagList: this.tagList.map(tag => tag.toJson()),
         }
     }
 }
