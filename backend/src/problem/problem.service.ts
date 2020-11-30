@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException, HttpException, BadRequestException, InternalServerErrorException } from '@nestjs/common';
 import { Neo4jService } from 'nest-neo4j';
 import { Problem } from './dto/problem.dto';
 import { ChatMessage } from 'src/chat/dto/chat.dto';
@@ -21,7 +21,9 @@ export class ProblemService {
             `,
             { id_client: id })
             .then(res => {
-                return res.records[0]
+                if (res.records.length > 0)
+                    return res.records[0]
+                throw new NotFoundException('no problem found by id client')
             })
     }
 
@@ -34,7 +36,9 @@ export class ProblemService {
         `,
             { id_staff: id })
             .then(res => {
-                return res.records[0]
+                if (res.records.length > 0)
+                    return res.records[0]
+                throw new NotFoundException('no problem found by id staff')
             })
     }
 
@@ -117,7 +121,9 @@ export class ProblemService {
                     row.get('date')
                 )
             })
-            return users.map(a => a)
+            if (res.records.length > 0)
+                return users.map(a => a)
+            throw new BadRequestException('error on create problem')
         })
     }
 
@@ -148,7 +154,9 @@ export class ProblemService {
                 avaliantion: avaliantion
             })
             .then(res => {
-                return res.records[0]
+                if (res.records.length > 0)
+                    return res.records[0]
+                throw new BadRequestException('error on edit problem to solved')
             })
 
     }

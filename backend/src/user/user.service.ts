@@ -1,4 +1,4 @@
-import { Injectable, Res, HttpStatus, HttpException } from '@nestjs/common';
+import { Injectable, Res, HttpStatus, HttpException, NotFoundException, BadRequestException } from '@nestjs/common';
 import { User } from './entity/user.entity';
 import { CreateUser } from './dto/user.dto';
 import { Neo4jService } from 'nest-neo4j';
@@ -8,6 +8,26 @@ export class UserService {
     constructor(
         private neo4jService: Neo4jService
     ) { }
+
+    async findById(id: number): Promise<any> {
+        return await this.neo4jService.read(`
+            MATCH (u:User) WHERE id(u) = toInteger($id)
+            RETURN  u,
+                    u.name as name,
+                    u.type_user as type_user
+        `, { id: id }).then(res => {
+            const users = res.records.map(row => {
+                return new User(
+                    row.get('u'),
+                    row.get('name'),
+                    row.get('type_user')
+                )
+            })
+            if (res.records.length > 0)
+                return users.map(a => a)
+            throw new NotFoundException('user not found')
+        })
+    }
 
     async create(user: CreateUser, type: string) {
         var propertiesDefault
@@ -33,29 +53,11 @@ export class UserService {
                     null
                 )
             })
-            return users.map(a => a)
+            if (res.records.length > 0)
+                return users.map(a => a)
+            throw new BadRequestException('error on create user')
         })
     }
 
-    async findById(id: number): Promise<User[]> {
-        const foundusers = await this.neo4jService.read(`
-            MATCH (u:User) WHERE id(u) = toInteger($id)
-            RETURN  u,
-                    u.name as name,
-                    u.type_user as type_user
-        `, { id: id }).then(res => {
-            const users = res.records.map(row => {
-                return new User(
-                    row.get('u'),
-                    row.get('name'),
-                    row.get('type_user')
-                )
-            })
-            return users.map(a => a)
-        })
-        if (foundusers.length == 0)
-            throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-        return foundusers
-    }
 
 }

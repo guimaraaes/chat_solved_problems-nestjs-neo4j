@@ -1,4 +1,4 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus, NotFoundException, BadRequestException } from '@nestjs/common';
 import { AppGateway } from '../app.gateway';
 import { ChatMessage, EditChat } from './dto/chat.dto';
 import { Neo4jService } from 'nest-neo4j';
@@ -15,12 +15,13 @@ export class ChatService {
 
     private async existUsers(id_users: number[]): Promise<boolean> {
         return await this.neo4jService.read(`
-        MATCH (u:User) WHERE id(u) IN $ids
-        RETURN  count(u) AS count_user,
-                size($ids) AS count_ids
-        `, { ids: id_users }).then(res => {
-            return (res.records[0].get('count_ids').low == res.records[0].get('count_user').low)
-        })
+            MATCH (u:User) WHERE id(u) IN $ids
+            RETURN  count(u) AS count_user,
+                    size($ids) AS count_ids
+        `, { ids: id_users })
+            .then(res => {
+                return (res.records[0].get('count_ids').low == res.records[0].get('count_user').low)
+            })
     }
 
     async findByIdUsers(ids: number[]) {
@@ -51,7 +52,10 @@ export class ChatService {
                 )
                 return { chatMessage, id_user: Number(row.get('id_user')) }
             })
-            return users.map(a => a)
+
+            if (res.records.length > 0)
+                return users.map(a => a)
+            throw new NotFoundException('no chat found by ids users')
         })
     }
 
@@ -63,7 +67,7 @@ export class ChatService {
 
         var exist_users = await this.existUsers(id_users)
         if (!exist_users)
-            throw new HttpException('Some user not found', HttpStatus.NOT_FOUND);
+            throw new NotFoundException('Some user not found');
 
         var wssCanal = []
         chatMessage.id_users_on_chat.map((value) => {
@@ -122,13 +126,14 @@ export class ChatService {
                 )
                 return { message, id_user: Number(row.get('id_user')) }
             })
-
-            return users.map(a => a)
+            if (res.records.length > 0)
+                return users.map(a => a)
+            throw new BadRequestException('error on send message')
         })
     }
 
     async editChatRemove(id_chat: number, id_user: number) {
-        var ids = await this.neo4jService.read(`
+        return await this.neo4jService.read(`
                 MATCH (c:Chat) WHERE id(c) = toInteger($id_chat)
                     SET c.id_user = apoc.coll.removeAll(c.id_user, [$id_user])
                 WITH c
@@ -139,13 +144,14 @@ export class ChatService {
             id_chat: id_chat,
             id_user: Number(id_user)
         }).then(res => {
-            return res.records[0].get('c')
+            if (res.records.length > 0)
+                return res.records[0].get('c')
+            throw new NotFoundException('no user found by ids users or internal error on remove')
         })
-        return ids
     }
 
     async editChatAdd(id_chat: number, id_user: number) {
-        var ids = await this.neo4jService.read(`
+        return await this.neo4jService.read(`
             MATCH (c:Chat) WHERE id(c) = toInteger($id_chat)
                 SET c.id_user = apoc.coll.union(c.id_user, [$id_user])
             WITH c
@@ -157,8 +163,9 @@ export class ChatService {
             id_chat: id_chat,
             id_user: Number(id_user)
         }).then(res => {
-            return res.records[0]
+            if (res.records.length > 0)
+                return res.records[0].get('c')
+            throw new NotFoundException('no user found by ids users or internal error on add')
         })
-        return ids
     }
 }

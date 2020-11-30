@@ -9,6 +9,7 @@ async function bootstrap() {
 
   const options = new DocumentBuilder()
     .setTitle('chat api to solve problems')
+    .setDescription('chat api to create client`s problems, associate them to staffs and one chat and after solved associate to one staff')
     .setVersion('2.0')
     .build();
   const document = SwaggerModule.createDocument(app, options);
