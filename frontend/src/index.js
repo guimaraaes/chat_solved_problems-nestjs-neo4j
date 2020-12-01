@@ -1,20 +1,13 @@
 import React from 'react'
 import ReactDom from 'react-dom'
-import Chat from './components/Chat'
-import faker from 'faker'
-import TabChats from './components/TabChats'
+import Chat from './views/Chat'
+import Home from './views/Home'
 const App = () => {
     return (
 
-        <div className='ui container comments column grid'>
-            <div class="ui segment">
-                {[...Array(5).keys()].map((i) => (<TabChats />))}
-            </div>
-
-            <div class="ui segment">
-                <Chat />
-            </div>
-
+        <div>
+            {/* <Home /> */}
+            <Chat />
         </div>
 
     );
