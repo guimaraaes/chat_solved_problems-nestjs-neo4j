@@ -2,10 +2,10 @@ import React from 'react'
 import * as S from './MessageStyle'
 
 class Message extends React.Component {
-    // constructor(props) {
-    //     super(props)
+    constructor(props) {
+        super(props)
 
-    // }
+    }
     render() {
         return (
             <S.Message color={this.props.color}>
@@ -18,13 +18,13 @@ class Message extends React.Component {
                     <S.UsernameMessage>
                         <S.UsernameHour>
 
-                            <a href='/' className='author'> Zé </a>
+                            <a href='/' className='author'>  {this.props.name_user} </a>
                             <div className='metadata'>
                                 <span className='date'>
-                                    hh:mm </span>
+                                    {this.props.date} </span>
                             </div>
                         </S.UsernameHour>
-                        < div className='text'> Mensagem </div>
+                        < div className='text'> {this.props.message} </div>
                     </S.UsernameMessage>
                 </div>
             </S.Message>)

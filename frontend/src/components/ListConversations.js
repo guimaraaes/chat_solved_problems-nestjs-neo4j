@@ -9,17 +9,13 @@ class ListConversations extends React.Component {
     render() {
         return (
             <S.Conversation>
-
                 <a class="avatar">
                     <img alt='avatar' src={this.props.avatar} />
                 </a>
                 <div class="content">
-                    <a class="author">Elliot Fu</a>
+                    <a class="author">{this.props.type_user + ': ' + this.props.username}</a>
                 </div>
-
-
             </S.Conversation>
-
         )
     }
 }

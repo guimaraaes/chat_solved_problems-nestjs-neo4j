@@ -1,49 +1,39 @@
 import styled from 'styled-components'
 
 export const MessageRight = styled.div`
-    /* position:absolute; */
-    /* right: 0; */
     display: flex;
     justify-content: flex-end;
-    /* width: 200px;
-    /* margin-left: 0; */
   `;
 
 export const Send = styled.div`
-    /* background: red; */
-    /* display: flex; */
-    /* width: 50%;
-    justify-content:center; */
-    position: absolute;
-    width: 50%;
-    /* align-items:center; */
-    bottom: 0;
-    margin-bottom:50px;
+    
+    min-width: 350px;
+    max-width: 800px;
+    margin:auto;
+    margin-top: 15px;
+ 
 `;
 
 export const MessageContent = styled.div`
-
     display:flex;
+    justify-content: center;
     flex-direction:column; 
-    /* justify-content: flex-end; */
-    /* align-items: flex-end; */
-    /* justify-items: end; */
-    /* position: relative; */
-    /* align-self: flex-end; */
-    /* margin-bottom: 0; */
-    /* bottom: 0; */
      
+    
+    /* height: 400px; */
+    /* position:static; */
+    /* height: 10%; */
+    /* overflow: auto;
+    scroll-snap-align: end; */
+`;
+
+export const Content = styled.div`
+  /* position:relative;
+    height:700px; */
+ 
 `;
 
 export const MessageUser = styled.div`
- 
-    /* right: 0; */
-    /* margin-right:0; */
-    /* width: 200px; */
     display:flex;
-    /* justify-content: space-between; */
     align-items: flex-end;
-    
-    /* background: red; */
-
 `;
