@@ -31,6 +31,7 @@ export class ChatService {
         })
 
         var exist_users = await this.existUsers(id_users)
+        // return exist_users
         if (!exist_users)
             throw new HttpException('Chat not found', HttpStatus.NOT_FOUND);
 
@@ -51,7 +52,12 @@ export class ChatService {
                     row.get('message'),
                     row.get('date')
                 )
-                return { chatMessage, id_user: Number(row.get('id_user')) }
+                return {
+                    name_user: row.get('name_user'),
+                    message: row.get('message'),
+                    date: row.get('date'),
+                    id_user: Number(row.get('id_user'))
+                }
             })
 
             if (res.records.length > 0)

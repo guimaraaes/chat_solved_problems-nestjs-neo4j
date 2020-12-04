@@ -5,22 +5,41 @@ import * as S from './ChatMessageStyle'
 import Moment from 'moment';
 
 
-
 class ChatMessage extends React.Component {
     constructor(props) {
         super(props)
-        this.name_user = 'Aquino'
+        this.id_user = this.props.id_user
+        this.scrollToBottom()
+    }
+    scrollToBottom = () => {
+        // this.messagesEnd.scrollTop = this.messagesEnd.scrollHeight;
+        this.messagesEnd && this.messagesEnd.scrollIntoView({ behavior: "smooth", block: 'end' });
+
+        // this.messagesEnd.scrollIntoView({ behavior: "smooth" });
     }
 
+    componentDidMount() {
+        this.scrollToBottom();
+    }
 
+    componentDidUpdate() {
+        this.scrollToBottom();
+    }
     render() {
         return (
 
             < S.Content >
-                <div>
+                <div className="messagesEnd" ref={(elem) => this.messagesEnd = elem} >
+
+                    {/* <Message
+                        color='#9996'
+                        avatar={faker.image.animals()}
+                        name_user={'i.name_user'}
+                        date={('HH:mm')}
+                        message={'i.message'} /> */}
                     {this.props.chatMessage.map(i =>
                         (
-                            this.name_user == i.name_user ? (
+                            this.id_user === i.id_user ? (
                                 <>
                                     < S.MessageRight >
 

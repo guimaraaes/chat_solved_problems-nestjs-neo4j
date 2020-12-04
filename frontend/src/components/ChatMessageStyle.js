@@ -38,8 +38,9 @@ export const Content = styled.div`
     /* background: red; */
     /* overflow: scroll; */
     overflow-y: scroll;
- 
-        
+ /* behavior: smooth;
+ block: end;;
+         */
  
  
 `;

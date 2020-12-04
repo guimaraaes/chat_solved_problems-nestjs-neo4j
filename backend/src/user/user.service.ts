@@ -53,15 +53,15 @@ export class UserService {
 
     async findById(id: number): Promise<any> {
         return await this.neo4jService.read(`
-            MATCH (u:User) //WHERE id(u) = toInteger($id)
+            MATCH (u:User) WHERE id(u) = toInteger($id)
             RETURN  u,
                     u.name as name,
                     u.type as type_user
         `, { id: id }).then(res => {
             const users = res.records.map(row => {
                 return new User(
-                    // row.get('u'),
-                    null,
+                    row.get('u'),
+                    // null,
                     row.get('name'),
                     row.get('type_user')
                 )

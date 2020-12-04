@@ -45,7 +45,10 @@ API com interface básicas para resolver problemas em um chat.
 ## Ações para implementar com o front
 - [x] enviar hora para poder ordenar as mensagens no chat
 - [ ] a computação das datas de tempo médio para resolver problema
-- [ ] a regra de negócio deve ditar quantidade máxima de user no chat e se ao final de todos os problemas quem deve sair
-- [ ] responsividade
-- [ ] subtela para cadastrar problema
-- [ ] socket no front
+- [x] a regra de negócio deve ditar quantidade máxima de user no chat e se ao final de todos os problemas quem deve sair
+- [x] responsividade
+- [x] subtela para cadastrar/finalizar problema
+- [x] socket no front
+- [ ] obter o cliente de cada chat para buscar os problemas
+- [ ] cadastrar e finalizar problemas
+- [ ] scroll começando do fim

@@ -6,9 +6,7 @@ export const TabChat = styled.div`
     flex-direction: column;
     justify-content: flex-start; 
     flex-wrap: wrap;
-    @media (max-width: 1500px) {
-        display:none;
-    }
+    
 `;
 
 export const Send = styled.div`
@@ -50,11 +48,21 @@ export const ChatMessage = styled.div`
 
 export const Tab = styled.div`
    height: 800px;
-        display: flex;
-        
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    /* background: red; */
+    @media (max-width: 1650px) {
+        display:none;
+    }
+    .InfoClient{
+        position: fixed;
+        display:flex;
+        bottom:5%;
+        /* background:red; */
         flex-direction: column;
-        justify-content: space-between;
-        /* background: red; */
+        justify-content:flex-end;
+    }
 
 `;
 export const Container = styled.div`
@@ -69,8 +77,21 @@ export const Container = styled.div`
     
     margin:2%;
     
+    
  
  `;
+
+export const InfoClient = styled.div`
+    position: absolute;
+    display:flex;
+    flex-direction: column;
+    justify-content:flex-end;
+        /* bottom: 900px; */
+        /* bottom: 0;     */
+        
+        /* background: red; */
+`;
+
 
 export const Scream = styled.div`
     /* position:fixed; */

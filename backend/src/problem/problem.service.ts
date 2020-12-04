@@ -17,13 +17,22 @@ export class ProblemService {
         return this.neo4jService.read(`
                 MATCH (p:Problem)<-[:HAS_PROBLEM]-(c:Client) 
                     WHERE id(c) = toInteger($id_client)
-                RETURN p
+                RETURN p.description as description,
+                p.type as type
             `,
             { id_client: id })
             .then(res => {
+                const problems = res.records.map(row => {
+                    return {
+                        description: row.get('description'),
+                        type: row.get('type')
+                    }
+                })
+
                 if (res.records.length > 0)
-                    return res.records[0]
+                    return problems.map(a => a)
                 throw new NotFoundException('no problem found by id client')
+
             })
     }
 
@@ -49,18 +58,12 @@ export class ProblemService {
             message_content: problem.description,
         }
 
-
         var id_users = []
         chatMessage.id_users_on_chat.forEach((i) => {
             id_users.push(Number(i))
         })
 
-        var wssCanal = ''
-        chatMessage.id_users_on_chat.map((value) => {
-            wssCanal = wssCanal + '&id_users=' + value
-        })
-        wssCanal = "?" + wssCanal.slice(1,)
-
+        // return id_users
         id_users.forEach((value) => {
             this.neo4jService.write(`
                 MATCH (c:Chat) WHERE size(c.id_user) = size($ids) AND ALL (x IN c.id_user WHERE x IN $ids)
@@ -109,6 +112,13 @@ export class ProblemService {
             message: chatMessage.message_content.message,
             date: chatMessage.message_content.date
         }).then(res => {
+
+            var wssCanal = ''
+            chatMessage.id_users_on_chat.map((value) => {
+                wssCanal = wssCanal + '&id_users=' + value
+            })
+            wssCanal = "?" + wssCanal.slice(1,)
+
             const users = res.records.map(row => {
                 this.gateway.wss.emit(wssCanal, {
                     name_user: row.get('name_user'),
