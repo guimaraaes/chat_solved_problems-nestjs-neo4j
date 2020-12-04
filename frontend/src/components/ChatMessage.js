@@ -5,59 +5,56 @@ import * as S from './ChatMessageStyle'
 import Moment from 'moment';
 
 
+
 class ChatMessage extends React.Component {
     constructor(props) {
         super(props)
         this.name_user = 'Aquino'
     }
 
+
     render() {
         return (
-            <div >
-                <S.Content>
-                    <S.MessageContent>
 
-                        {this.props.chatMessage.map(i =>
+            < S.Content >
+                <div>
+                    {this.props.chatMessage.map(i =>
+                        (
+                            this.name_user == i.name_user ? (
+                                <>
+                                    < S.MessageRight >
 
-                            (
-
-                                this.name_user == i.name_user ? (
-
-                                    <>
-                                        < S.MessageRight >
-
-                                            <S.MessageUser>
-                                                <Message
-                                                    color='#9996'
-                                                    avatar={faker.image.animals()}
-                                                    name_user={i.name_user}
-                                                    date={Moment(i.date).format('HH:mm')}
-                                                    message={i.message} />
-
-                                            </S.MessageUser>
-                                        </S.MessageRight>
-                                    </>
-                                ) :
-                                    (
-
-                                        <>
-                                            < Message
-                                                color='#999'
+                                        <S.MessageUser>
+                                            <Message
+                                                color='#9996'
                                                 avatar={faker.image.animals()}
                                                 name_user={i.name_user}
                                                 date={Moment(i.date).format('HH:mm')}
                                                 message={i.message} />
-                                        </>
-                                    )
-                            )
 
-                        )}
+                                        </S.MessageUser>
+                                    </S.MessageRight>
+                                </>
+                            ) :
+                                (
 
+                                    <>
+                                        < Message
+                                            color='#999'
+                                            avatar={faker.image.animals()}
+                                            name_user={i.name_user}
+                                            date={Moment(i.date).format('HH:mm')}
+                                            message={i.message} />
+                                    </>
+                                )
+                        )
 
-                    </S.MessageContent>
-                </S.Content>
+                    )
+                    }
 
-            </div >
+                </div>
+            </S.Content >
+
 
         )
     }

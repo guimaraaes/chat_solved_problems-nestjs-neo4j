@@ -43,6 +43,7 @@ export class ChatService {
                     m.message AS message,
                     m.date AS date,
                     id(u) AS id_user
+                    ORDER BY date
         `, { ids: id_users }).then(res => {
             const users = res.records.map(row => {
                 const chatMessage = new Message(
@@ -69,11 +70,11 @@ export class ChatService {
         if (!exist_users)
             throw new NotFoundException('Some user not found');
 
-        var wssCanal = []
+        var wsChannel = []
         chatMessage.id_users_on_chat.map((value) => {
-            wssCanal.push(value)
+            wsChannel.push(value)
         })
-        wssCanal = wssCanal.sort()
+        wsChannel = wsChannel.sort()
         // return wssCanal
 
         // id_users.forEach((value) => {
@@ -114,7 +115,7 @@ export class ChatService {
             date: chatMessage.message_content.date
         }).then(res => {
             const users = res.records.map(row => {
-                this.gateway.wss.emit(wssCanal, {
+                this.gateway.wss.emit(wsChannel, {
                     name_user: row.get('name_user'),
                     message: row.get('message'),
                     date: row.get('date')

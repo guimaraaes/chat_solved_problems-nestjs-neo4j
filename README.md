@@ -39,10 +39,13 @@ API com interface básicas para resolver problemas em um chat.
 
 ### api 0.2
 - [ ] controle entre staff no chat de acordo com o problema ao qual foi cadastrado
-- [ ] documentação detalhada do swagger
-- [ ] mensagens de exception
+- [x] documentação detalhada do swagger
+- [x] mensagens de exception
 
 ## Ações para implementar com o front
-- [ ] enviar hora para poder ordenar as mensagens no chat
+- [x] enviar hora para poder ordenar as mensagens no chat
 - [ ] a computação das datas de tempo médio para resolver problema
 - [ ] a regra de negócio deve ditar quantidade máxima de user no chat e se ao final de todos os problemas quem deve sair
+- [ ] responsividade
+- [ ] subtela para cadastrar problema
+- [ ] socket no front

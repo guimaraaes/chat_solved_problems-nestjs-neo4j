@@ -18,7 +18,7 @@ class Message extends React.Component {
                     <S.UsernameMessage>
                         <S.UsernameHour>
 
-                            <a href='/' className='author'>  {this.props.name_user} </a>
+                            <a href='/' class='user'>  {this.props.name_user} </a>
                             <div className='metadata'>
                                 <span className='date'>
                                     {this.props.date} </span>

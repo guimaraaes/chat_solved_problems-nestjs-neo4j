@@ -28,7 +28,7 @@ function makeRequest(method, url, data) {
 
 
 //GET example
-makeRequest('GET', "http://localhost:3000/chat" + location.search).then(function (data) {
+makeRequest('GET', "http://localhost:9000/chat" + location.search).then(function (data) {
   var results = JSON.parse(data);
   console.log(location.search);
   const id = new URL(location.href).searchParams.get('id_current_user');

@@ -4,8 +4,16 @@ class Header extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            blockProblem: true
+            blockProblem: true,
+            problemDescription: this.props.problemDescription
         }
+        this.handleChange = this.handleChange.bind(this)
+    }
+    handleChange(e) {
+        this.setState({
+            [e.target.name]: [e.target.value]
+        })
+        this.props.onChange(this.state)
 
     }
     render() {
@@ -18,8 +26,6 @@ class Header extends React.Component {
 
                     <S.ButtonLeft>
                         <div className='buttonAdd' class="ui icon button" onClick={() => { this.setState({ blockProblem: !this.state.blockProblem }) }}>
-
-
                             <i class="icon plus circle"></i>
                         </div>
                     </S.ButtonLeft>
@@ -28,7 +34,11 @@ class Header extends React.Component {
                     <h1>cadastrar problema</h1>
                     <form>
                         <div class="ui fluid icon input">
-                            <input type="text" placeholder="Descreve seu problema..." />
+                            <input name='problemDescription'
+                                value={this.state.problemDescription}
+                                onChange={this.handleChange}
+                                type="text"
+                                placeholder="Descreve seu problema..." />
                             <div class="ui primary submit  icon button">
                                 <i class="icon plus"></i>
                             </div>

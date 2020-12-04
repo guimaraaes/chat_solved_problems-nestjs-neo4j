@@ -9,6 +9,7 @@ export const Send = styled.div`
     
     min-width: 350px;
     max-width: 800px;
+    justify-self:center;
     margin:auto;
     margin-top: 15px;
  
@@ -18,8 +19,11 @@ export const MessageContent = styled.div`
     display:flex;
     justify-content: center;
     flex-direction:column; 
-     
     
+    height: 700px;
+    /* overflow-y: auto;
+    overflow-x: hidden; */
+    /* bottom: 10%; */
     /* height: 400px; */
     /* position:static; */
     /* height: 10%; */
@@ -28,8 +32,15 @@ export const MessageContent = styled.div`
 `;
 
 export const Content = styled.div`
-  /* position:relative;
-    height:700px; */
+    /* display:flex; */
+     /* flex-direction:column-reverse; */
+    position: relative;
+    /* background: red; */
+    /* overflow: scroll; */
+    overflow-y: scroll;
+ 
+        
+ 
  
 `;
 

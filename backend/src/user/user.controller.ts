@@ -10,6 +10,23 @@ export class UserController {
         private readonly serviceUser: UserService
     ) { }
 
+    @Get('/clients')
+    @ApiOperation({ summary: 'get all clients' })
+    @ApiOkResponse({ description: 'users found' })
+    @ApiNotFoundResponse({ description: 'no user found' })
+    getAllClients() {
+        return this.serviceUser.findAllClients()
+    }
+
+    @Get('staffs')
+    @ApiOperation({ summary: 'get all staffs' })
+    @ApiOkResponse({ description: 'users found' })
+    @ApiNotFoundResponse({ description: 'no user found' })
+    getAllStaffs() {
+        return this.serviceUser.findAllStaffs()
+    }
+
+
     @Get(':id')
     @ApiOperation({ summary: 'get user by id' })
     @ApiOkResponse({ description: 'user found' })

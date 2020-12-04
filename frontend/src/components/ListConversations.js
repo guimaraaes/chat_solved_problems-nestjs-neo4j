@@ -12,9 +12,24 @@ class ListConversations extends React.Component {
                 <a class="avatar">
                     <img alt='avatar' src={this.props.avatar} />
                 </a>
-                <div class="content">
-                    <a class="author">{this.props.type_user + ': ' + this.props.username}</a>
+                <div class="identity">
+                    {/* <a class="type">{this.props.type_user}</a> <br /> */}
+                    <a class="user">{this.props.username}</a>
                 </div>
+                {this.props.type_user == 'Client' ? (
+                    <div class="divProblems">
+                        <a class="quantityProblemsSolved"> {this.props.countProbSolv}</a>/
+                        <a class="quantityProblems">{this.props.countProb} </a> <br />problemas
+                    </div>
+
+                ) :
+                    (
+                        <div class="divProblems">
+                            <a class="quantityProblemsSolved">{this.props.countSolv} </a>  <br />problemas
+                        </div>
+                    )
+                }
+
             </S.Conversation>
         )
     }
