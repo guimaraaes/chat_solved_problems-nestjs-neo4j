@@ -39,7 +39,8 @@ export class ChatService {
             MATCH (c:Chat) WHERE size(c.id_user) = size($ids) AND ALL (x IN c.id_user WHERE x IN $ids)
             WITH c
             MATCH (c)-[]->(m:Message)-[:SEND_BY]->(u)
-            RETURN  m,
+            RETURN  id(c) as id_chat,
+                    m,
                     m.name_user AS name_user,
                     m.message AS message,
                     m.date AS date,
@@ -47,12 +48,13 @@ export class ChatService {
                     ORDER BY date
         `, { ids: id_users }).then(res => {
             const users = res.records.map(row => {
-                const chatMessage = new Message(
-                    row.get('name_user'),
-                    row.get('message'),
-                    row.get('date')
-                )
+                // const chatMessage = new Message(
+                //     row.get('name_user'),
+                //     row.get('message'),
+                //     row.get('date')
+                // )
                 return {
+                    id_chat: Number(row.get('id_chat')),
                     name_user: row.get('name_user'),
                     message: row.get('message'),
                     date: row.get('date'),
@@ -124,7 +126,8 @@ export class ChatService {
                 this.gateway.wss.emit(wsChannel, {
                     name_user: row.get('name_user'),
                     message: row.get('message'),
-                    date: row.get('date')
+                    date: row.get('date'),
+                    id_user: Number(row.get('id_user'))
                 })
                 const message = new Message(
                     row.get('name_user'),

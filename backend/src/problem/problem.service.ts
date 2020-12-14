@@ -62,15 +62,29 @@ export class ProblemService {
         chatMessage.id_users_on_chat.forEach((i) => {
             id_users.push(Number(i))
         })
-
-        // return id_users
-        id_users.forEach((value) => {
-            this.neo4jService.write(`
+        await this.neo4jService.write(`
                 MATCH (c:Chat) WHERE size(c.id_user) = size($ids) AND ALL (x IN c.id_user WHERE x IN $ids)
                 WITH count(c) as i
                 CALL apoc.do.when(
-                    i > 0 ,
-                    'MATCH (cr:Chat) WHERE size(cr.id_user) = size(ids) AND  ALL ( x IN cr.id_user WHERE x IN ids) MATCH (u:User) WHERE id(u) = (id) MERGE (cr)<-[:IS_ON]-(u) RETURN cr',
+                    i = 1 ,
+                    '',
+                    'MERGE (cr:Chat {id_user: $ids})',
+                    {ids:$ids}
+                    )
+                YIELD value
+                RETURN value.resultNodes as resultNodes
+                `, {
+            ids: chatMessage.id_users_on_chat
+        })
+
+        // return chatMessage.id_users_on_chat
+        id_users.forEach(async (value) => {
+            await this.neo4jService.write(`
+                MATCH (c:Chat) WHERE size(c.id_user) = size($ids) AND ALL (x IN c.id_user WHERE x IN $ids)
+                WITH count(c) as i
+                CALL apoc.do.when(
+                    i = 1 ,
+                    'MATCH (cr:Chat) WHERE size(cr.id_user) = size($ids) AND  ALL ( x IN cr.id_user WHERE x IN $ids) MATCH (u:User) WHERE id(u) = ($id) MERGE (cr)<-[:IS_ON]-(u) RETURN cr',
                     'MERGE (cr:Chat {id_user: ids}) WITH cr MATCH (u:User) WHERE id(u) = ($id) WITH cr, u MERGE (cr)<-[:IS_ON]-(u) RETURN cr',
                     {id: $id, ids:$ids}
                     )
@@ -81,7 +95,6 @@ export class ProblemService {
                 ids: chatMessage.id_users_on_chat
             })
         });
-
 
         await this.neo4jService.write(`
             MATCH (c:User) WHERE id(c) = $id_client

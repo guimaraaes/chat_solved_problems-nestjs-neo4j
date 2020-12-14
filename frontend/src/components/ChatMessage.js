@@ -9,7 +9,9 @@ class ChatMessage extends React.Component {
     constructor(props) {
         super(props)
         this.id_user = this.props.id_user
-        this.scrollToBottom()
+
+
+
     }
     scrollToBottom = () => {
         // this.messagesEnd.scrollTop = this.messagesEnd.scrollHeight;
@@ -20,29 +22,24 @@ class ChatMessage extends React.Component {
 
     componentDidMount() {
         this.scrollToBottom();
+
     }
 
-    componentDidUpdate() {
-        this.scrollToBottom();
-    }
+
+    // componentDidUpdate() {
+    //     this.scrollToBottom();
+    // }
+
     render() {
         return (
 
             < S.Content >
                 <div className="messagesEnd" ref={(elem) => this.messagesEnd = elem} >
-
-                    {/* <Message
-                        color='#9996'
-                        avatar={faker.image.animals()}
-                        name_user={'i.name_user'}
-                        date={('HH:mm')}
-                        message={'i.message'} /> */}
                     {this.props.chatMessage.map(i =>
                         (
-                            this.id_user === i.id_user ? (
+                            Number(this.id_user) === i.id_user ? (
                                 <>
                                     < S.MessageRight >
-
                                         <S.MessageUser>
                                             <Message
                                                 color='#9996'
@@ -50,13 +47,11 @@ class ChatMessage extends React.Component {
                                                 name_user={i.name_user}
                                                 date={Moment(i.date).format('HH:mm')}
                                                 message={i.message} />
-
                                         </S.MessageUser>
                                     </S.MessageRight>
                                 </>
                             ) :
                                 (
-
                                     <>
                                         < Message
                                             color='#999'
@@ -67,7 +62,6 @@ class ChatMessage extends React.Component {
                                     </>
                                 )
                         )
-
                     )
                     }
 

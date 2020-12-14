@@ -6,7 +6,6 @@ export const MessageRight = styled.div`
   `;
 
 export const Send = styled.div`
-    
     min-width: 350px;
     max-width: 800px;
     justify-self:center;

@@ -11,9 +11,20 @@ class ListStaffs extends React.Component {
                 <div class="ui middle aligned divided list">
                     <div class="item">
                         <div class="right floated content">
-                            <div class="ui button">{
-                                this.props.isOnChat ? 'Remover' : 'Adicionar'
-                            }</div>
+
+                            {this.props.isOnChat ?
+                                this.props.letRemoveCurrentStaff ?
+                                    <div class="ui button disable"
+                                        onClick={() => {
+                                            this.props.remove_staff(this.props.id)
+                                        }
+                                        }>Remover</div> : null
+                                : <div class="ui button disable"
+                                    onClick={() => {
+                                        this.props.add_staff(this.props.id)
+                                    }
+                                    }> Adicionar </div>
+                            }
                         </div>
                         <img class="ui avatar image" src={this.props.avatar} />
                         <div class="content">

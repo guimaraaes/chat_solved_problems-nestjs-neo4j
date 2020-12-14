@@ -36,11 +36,13 @@ export class UserService {
         return await this.neo4jService.read(`
             MATCH  (s:Staff)
             OPTIONAL MATCH(s)-[sol:SOLVED]->() 
-            RETURN s.name as staff_name,
+            RETURN id(s) as id, 
+                s.name as staff_name,
                 count(sol) as countSolv
         `).then(res => {
             const staffs = res.records.map(row => {
                 return {
+                    id: row.get('id').low,
                     staff_name: row.get('staff_name'),
                     countSolv: row.get('countSolv').low
                 }

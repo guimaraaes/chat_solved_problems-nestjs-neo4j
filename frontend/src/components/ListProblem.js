@@ -1,6 +1,5 @@
 import React from 'react'
 import * as S from './ListProblemStyle'
-import api from '../services/api'
 
 class ListProblem extends React.Component {
     constructor(props) {
@@ -17,17 +16,21 @@ class ListProblem extends React.Component {
             <S.Container>
                 <div class='InfoClient'>
                     <h3>problemas do cliente</h3>
-                    {this.state.problems.map(i =>
-                        <div class="ui relaxed divided list">
-                            <div class="item">
-                                <div class="content">
-                                    <a class="header">{i.type}</a>
-                                    <div class="description">{i.description}</div>
-                                </div>
+                    <S.Content>
+                        {this.state.problems.map(i =>
+                            <div class="ui relaxed divided list">
+                                <S.Row>
+                                    <div class="item">
+                                        <a class="header">{i.type}</a>
+                                        <div class="description">{i.description}</div>
+                                    </div>
+                                    <div class="ui submit icon button">
+                                        <i class='icon check'> </i>
+                                    </div>
+                                </S.Row>
                             </div>
-
-                        </div>
-                    )}
+                        )}
+                    </S.Content>
                 </div>
 
             </S.Container>
