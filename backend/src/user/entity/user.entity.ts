@@ -4,12 +4,16 @@ export class User {
     constructor(
         private readonly user: Node,
         private readonly name: string,
+        // private readonly username: string,
+        // private readonly password: string,
         private readonly type_user: string
     ) { }
     toJson(): Record<string, any> {
         return {
             ...this.user.properties,
             name: this.name,
+            // username: this.username,
+            // password: this.password,
             type_user: this.type_user,
         }
     }

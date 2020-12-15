@@ -156,7 +156,6 @@ class Chat extends React.Component {
                 </>
                 :
                 <>
-                    {/* {this.remove_staff(20)} */}
                     < S.Scream >
                         < Header
                             type={this.type}

@@ -38,9 +38,10 @@ API com interface básicas para resolver problemas em um chat.
 - [x] padronizar variáveis com o esquema
 
 ### api 0.2
-- [ ] controle entre staff no chat de acordo com o problema ao qual foi cadastrado
+- [x] controle entre staff no chat de acordo com o problema ao qual foi cadastrado
 - [x] documentação detalhada do swagger
 - [x] mensagens de exception
+- [ ] auth jwt
 
 ## Ações para implementar com o front
 - [x] enviar hora para poder ordenar as mensagens no chat
@@ -52,3 +53,4 @@ API com interface básicas para resolver problemas em um chat.
 - [ ] obter o cliente de cada chat para buscar os problemas
 - [ ] cadastrar e finalizar problemas
 - [ ] scroll começando do fim
+- [ ] tela login

@@ -8,6 +8,7 @@ async function bootstrap() {
   app.enableCors();
 
   const options = new DocumentBuilder()
+    .addBearerAuth()
     .setTitle('chat api to solve problems')
     .setDescription('chat api to create client`s problems, associate them to staffs and one chat and after solved associate to one staff')
     .setVersion('2.0')

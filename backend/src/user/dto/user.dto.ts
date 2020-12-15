@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger'
-
+import { MinLength, MaxLength, Matches, IsNotEmpty, IsEmail } from 'class-validator';
+import * as bcrypt from 'bcrypt'
 export enum UserType {
     Staff = 'Staff',
     Client = 'Client',
@@ -8,8 +9,21 @@ export enum UserType {
 export class CreateUser {
     @ApiProperty()
     name: string;
-    // @ApiProperty({ enum: ['Staff', 'Client'] })
-    // type_user: UserType;
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsEmail()
+    username: string;
+    @ApiProperty()
+    @MinLength(8)
+    @MaxLength(20)
+    @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/)
+    password: string;
+    salt: string;
+
+    async validPassword(password: string): Promise<boolean> {
+        const hash = await bcrypt.hash(password, this.salt);
+        return hash === this.password
+    }
 }
 
 export class Staff {
