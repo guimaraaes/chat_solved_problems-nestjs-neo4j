@@ -6,6 +6,7 @@ import { Neo4jService } from 'nest-neo4j';
 import * as bycript from 'bcrypt'
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from './jwt-payload.interface';
+import e from 'express';
 
 @Injectable()
 export class AuthService {
@@ -15,12 +16,11 @@ export class AuthService {
     ) { }
 
 
-    async singUp(authCredentials: AuthCredentials, type: string) {
-        const { username, password } = authCredentials;
-
-
+    async singUp(authCredentials: CreateUser, type: string) {
+        const { name, username, password } = authCredentials;
 
         const user = new CreateUser();
+        user.name = name;
         user.username = username;
         user.salt = await bycript.genSalt();
         user.password = await this.hashPassword(password, user.salt);
@@ -31,17 +31,16 @@ export class AuthService {
 
 
         var propertiesDefault
-        if (type == 'Client') {
+        if (type == 'Client')
             propertiesDefault = 'quantity_problems: 0,  problems_solved: 0, avaliantion_mean: 0'
-
-        } else {
+        else
             propertiesDefault = 'problems_solved_count: 0,  mean_avaliantion_score: 0 '
 
-        }
         return await this.neo4jService.read(`
             MERGE (u:User {name: $u.name, 
                             username: $u.username, 
                             password: $u.password,
+                            salt: $u.salt, 
                             type: $type, 
                             `+ propertiesDefault + `})
             WITH u
@@ -67,20 +66,27 @@ export class AuthService {
         return await this.neo4jService.read(`
             MATCH (u:User { username: $username})
             RETURN u.username as username,
+                    u.salt as salt,
+                    u.name as name,
                     u.password as password 
         `, { username: username }).then(
             res => {
-                const user = new CreateUser
-                user.username = res.records[0].get('username')
-                user.password = res.records[0].get('password')
+                if (res.records.length > 0) {
+                    const user = new CreateUser()
+                    user.username = res.records[0].get('username')
+                    user.name = res.records[0].get('name')
+                    user.salt = res.records[0].get('salt')
+                    user.password = res.records[0].get('password')
+                    return user
+                }
                 return null
             }
         )
     }
+
     async validateUserPassword(credentials: AuthCredentials): Promise<any> {
         const { username, password } = credentials;
-        const user = await (this.findOne(username))
-
+        const user: CreateUser = await (this.findOne(username))
         if (user && await user.validPassword(password))
             return user.username
         return null;
@@ -92,15 +98,10 @@ export class AuthService {
 
     async singIn(credentials: AuthCredentials): Promise<{ acessToken: string }> {
         const username = await this.validateUserPassword(credentials)
-        if (!username) {
+        if (!username)
             throw new UnauthorizedException('Invalid credentials')
-        }
-
         const payload: JwtPayload = { username }
         const acessToken = await this.jwtService.sign(payload);
         return { acessToken }
     }
-
-
-
 }

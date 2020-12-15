@@ -5,7 +5,7 @@ import { IsEmail, IsNotEmpty, MinLength, MaxLength, Matches } from 'class-valida
 export class AuthCredentials {
     @ApiProperty()
     @IsNotEmpty()
-    @IsEmail()
+    // @IsEmail()
     username: string;
 
 

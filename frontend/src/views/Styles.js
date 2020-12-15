@@ -95,8 +95,14 @@ export const Scream = styled.div`
 `;
 export const Login = styled.div`
     display: flex;
-    /* flex-direction: column; */
     justify-content: center;
+    margin: 2%;
+    div{
+        width: 400px;
+        .button{
+            width: 150px;
+        }
+    }
     
 `;
 

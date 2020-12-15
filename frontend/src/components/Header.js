@@ -26,13 +26,14 @@ class Header extends React.Component {
                     <S.TextCenter>
                         chat: nestjs and react js
                 </S.TextCenter>
-                    {this.props.type == 'Staff' ?
-                        null :
+                    {this.props.type == 'Client' ?
+
                         <S.ButtonLeft>
                             <div className='buttonAdd' class="ui icon button" onClick={() => { this.setState({ blockProblem: !this.state.blockProblem }) }}>
                                 <i class="icon plus circle"></i>
                             </div>
                         </S.ButtonLeft>
+                        : null
                     }
                 </S.Header>
 

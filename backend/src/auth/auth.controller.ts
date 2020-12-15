@@ -1,6 +1,6 @@
-import { Controller, Get, Body, Query, ValidationPipe } from '@nestjs/common';
+import { Controller, Get, Body, Query, ValidationPipe, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { ApiTags, ApiQuery, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiBadRequestResponse, ApiConflictResponse, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiTags, ApiQuery, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiBadRequestResponse, ApiConflictResponse, ApiBearerAuth, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { CreateUser, UserType } from 'src/user/dto/user.dto';
 import { AuthCredentials } from './dto/auth.dto';
 
@@ -11,7 +11,7 @@ export class AuthController {
         private readonly authService: AuthService
     ) { }
 
-    @Get('/singup')
+    @Post('/singup')
     @ApiOperation({ summary: 'create user' })
     @ApiCreatedResponse({ description: 'user created' })
     @ApiBadRequestResponse({ description: 'error on create user' })
@@ -22,11 +22,11 @@ export class AuthController {
     }
 
     @ApiBearerAuth()
-    @Get('/singin')
+    @Post('/singin')
     @ApiOperation({ summary: 'create user' })
     @ApiCreatedResponse({ description: 'user created' })
     @ApiBadRequestResponse({ description: 'error on create user' })
-    @ApiQuery({ name: 'type', enum: UserType })
+    @ApiUnauthorizedResponse({ description: 'Invalid credentials' })
     singin(@Body(ValidationPipe) credentials: AuthCredentials): Promise<{ acessToken: string }> {
         return this.authService.singIn(credentials)
     }
