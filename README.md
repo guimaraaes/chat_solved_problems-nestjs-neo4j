@@ -1,56 +1,25 @@
-# Sistema
-API com interface básicas para resolver problemas em um chat.
+# chat_solved_problems-nestjs-neo4j
 
+Aplicação web desenvolvida no backend com o framework [NestJS](https://nestjs.com/) e o banco de dados em grafos [Neo4j](https://neo4j.com/) e no frontend com o framework [ReactJS](https://pt-br.reactjs.org/).
 
-# VERSÕES
-## Chat, User, Message v1
-  ### Database
-- [x] Chat
-- [x] User
-- [x] SEND_BY
-- [x] YYYY-MM-DD
-- [x] IS_ON
+### Descrição das entidades
 
-  ### Api
-- [x] Interface básica para chat
-- [x] Criar usuários clientes
-- [x] Criar usuários funcionários
-- [x] Abrir chat pelo id dos usuários 
-- [x] Veriicar se chat/usuários existem
+Nesta aplicação pelo lado do **Cliente** os problemas são cadastrados, daí a aplicação cria um **Chat** com **Funcionários** pré-definidos e nesse Chat é onde ocorre a troca de **Mensagens**. Posteriomente podem ser utilizadas requisições HTTPS para inserir ou remover determinado funcionário no chat.
 
+Os relacionamentos das mensagens identificam quem enviou a mensagem (Cliente ou Funcionário) e também a data de envio com o chat.
 
-## Staff, Client, Problem v2
-  ### Database
-- [X] Staff
-- [X] Client
-- [x] Problem, Solution
-- [x] HAS_PROBLEM
-- [x] SOLVED
+Todos os Clientes e Funcionários são do tipo **User** que possui atributos de username, password e salt, apesar destes não serem mostrados no diagrama.
 
-  ### Api
-- [x] especificar o tipo de usuário ao criar
-- [x] cadastrar problema resolvido e eliminar staff do chat
-- [x] editar quem está no chat
-- [x] cadastrar chat pelo problema
-- [x] definir os funcionários ao criar o problema
-- [x] get para problems de client e staff
-- [x] flexibilizar o identificador do websocket
-- [x] padronizar variáveis com o esquema
+Os **Problemas** relacionam-se com os clientes que criaram e também com os funcionários que resolveram ele, além de serem rotulados como **Resolved** após serem resolvidos.
 
-### api 0.2
-- [x] controle entre staff no chat de acordo com o problema ao qual foi cadastrado
-- [x] documentação detalhada do swagger
-- [x] mensagens de exception
-- [ ] auth jwt
+Os atributos utilizados em relacionamentos e principalmente para descrever as variáveis podem ser observados no diagrama abaixo.
 
-## Ações para implementar com o front
-- [x] enviar hora para poder ordenar as mensagens no chat
-- [ ] a computação das datas de tempo médio para resolver problema
-- [x] a regra de negócio deve ditar quantidade máxima de user no chat e se ao final de todos os problemas quem deve sair
-- [x] responsividade
-- [x] subtela para cadastrar/finalizar problema
-- [x] socket no front
-- [ ] obter o cliente de cada chat para buscar os problemas
-- [ ] cadastrar e finalizar problemas
-- [ ] scroll começando do fim
-- [ ] tela login
+![img](https://raw.githubusercontent.com/guimaraaes/chat_solved_problems-nestjs-neo4j/master/arrow-schema-chat/v.png)
+
+### Outras observações
+
+- Autenticação [JWT](https://jwt.io/) para proteger a API e o acesso é permitido para os funcionário autenticados com os atributos e-mail e password.
+
+- Documentação da API com o [Swagger](https://swagger.io/).
+
+- Biblioteca [Socket.IO](https://socket.io/) para permitir a troca de mensagens.
